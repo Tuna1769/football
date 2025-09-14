@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>조기축구 득점 기록</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    table { margin: 20px auto; border-collapse: collapse; width: 50%; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
+    th { background: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <h1>조기축구 득점 기록</h1>
+  <table id="scoreTable">
+    <thead>
+      <tr><th>이름</th><th>득점</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    fetch("scores.csv")
+      .then(res => res.text())
+      .then(text => {
+        const rows = text.trim().split("\n").slice(1);
+        let data = rows.map(r => {
+          let [name, score] = r.split(",");
+          return { name, score: parseInt(score) };
+        });
+        data.sort((a,b) => b.score - a.score);
+        const tbody = document.querySelector("#scoreTable tbody");
+        data.forEach(player => {
+          let row = `<tr><td>${player.name}</td><td>${player.score}</td></tr>`;
+          tbody.innerHTML += row;
+        });
+      });
+  </script>
+</body>
+</html>
